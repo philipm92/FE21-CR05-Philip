@@ -1,11 +1,12 @@
 
 {
  "compilerOptions": {
-    "target": "es6",
-    "lib": ["DOM", "ES2021", "ES6", "ES5"],
+    "target": "ES6",
+    "lib": ["DOM", "ES6", "ES2021", "ESNext.String"],
     "module": "commonjs",
     "sourceMap": true,
-	  "watch":true,  
+	  "watch": true,  
     "strict": false
   }
+ 
 }

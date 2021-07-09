@@ -31,9 +31,15 @@ h1, h2, h3, h4, h5, h6 {
 
 // Add Shadow to navbar
 #own-navbar-shadow {
-    box-shadow: 1px 4px 5px $reverse-bg-color;
+    box-shadow: 1px 4px 5px $reverse-bg-color !important;
 }
 
 #own-footer-shadow {
-    box-shadow: -1px -4px 5px $reverse-bg-color;
+    box-shadow: -1px -4px 5px $reverse-bg-color !important;
 }
+
+// set fixed pixel width x height for image
+// img {
+//     width: 30vw !important;
+//     height: 20vh !important;
+// }

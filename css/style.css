@@ -25,12 +25,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #own-navbar-shadow {
-  -webkit-box-shadow: 1px 4px 5px rgba(0, 0, 0, 0.4);
-          box-shadow: 1px 4px 5px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 1px 4px 5px rgba(0, 0, 0, 0.4) !important;
+          box-shadow: 1px 4px 5px rgba(0, 0, 0, 0.4) !important;
 }
 
 #own-footer-shadow {
-  -webkit-box-shadow: -1px -4px 5px rgba(0, 0, 0, 0.4);
-          box-shadow: -1px -4px 5px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: -1px -4px 5px rgba(0, 0, 0, 0.4) !important;
+          box-shadow: -1px -4px 5px rgba(0, 0, 0, 0.4) !important;
 }
 /*# sourceMappingURL=style.css.map */
