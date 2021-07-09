@@ -25,12 +25,28 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #own-navbar-shadow {
-  -webkit-box-shadow: 1px 4px 5px rgba(0, 0, 0, 0.4) !important;
-          box-shadow: 1px 4px 5px rgba(0, 0, 0, 0.4) !important;
+  -webkit-box-shadow: 1px 4px 5px rgba(0, 0, 0, 0.3) !important;
+          box-shadow: 1px 4px 5px rgba(0, 0, 0, 0.3) !important;
 }
 
 #own-footer-shadow {
-  -webkit-box-shadow: -1px -4px 5px rgba(0, 0, 0, 0.4) !important;
-          box-shadow: -1px -4px 5px rgba(0, 0, 0, 0.4) !important;
+  -webkit-box-shadow: -1px -4px 5px rgba(0, 0, 0, 0.3) !important;
+          box-shadow: -1px -4px 5px rgba(0, 0, 0, 0.3) !important;
+}
+
+.animate__animated.animate__rubberBand {
+  --animate-duration: 2000ms;
+}
+
+.own-svg-size {
+  width: 1.2rem !important;
+  height: 1.2rem !important;
+}
+
+@media screen and (min-width: 768px) {
+  .own-svg-size {
+    width: 1.6rem !important;
+    height: 1.6rem !important;
+  }
 }
 /*# sourceMappingURL=style.css.map */

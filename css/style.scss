@@ -43,3 +43,24 @@ h1, h2, h3, h4, h5, h6 {
 //     width: 30vw !important;
 //     height: 20vh !important;
 // }
+
+
+// modify some animations from animate.style for css
+.animate__animated.animate__rubberBand {
+    --animate-duration: 2000ms;
+}
+
+.own-svg-size {
+    width: 1.2rem !important;
+    height: 1.2rem !important;  
+}
+
+// Mimicking bootstrap tablet breakpoint
+@media screen and (min-width: 768px) {
+    .own-svg-size {
+        width: 1.6rem !important;
+        height: 1.6rem !important;  
+    }
+    
+
+}
