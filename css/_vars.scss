@@ -1,0 +1,6 @@
+$bg-red-value: 255;
+$bg-blue-value: 255;
+$bg-green-value: 255;
+$bg-alpha-value: 1;
+$bg-color: rgba($bg-red-value, $bg-blue-value, $bg-green-value, $bg-alpha-value);
+$reverse-bg-color: rgba(255-$bg-red-value, 255-$bg-blue-value, 255-$bg-green-value, 0.4);
