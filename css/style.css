@@ -19,7 +19,8 @@ h1, h2, h3, h4, h5, h6 {
 .own-home-bgimage {
   background: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0)), to(white)), url("../img/header1.jpg") !important;
   background: linear-gradient(rgba(255, 255, 255, 0), white), url("../img/header1.jpg") !important;
-  height: 20vh !important;
+  height: 10vh !important;
+  background-size: 100% 10vh !important;
   background-position: center center !important;
   background-repeat: no-repeat !important;
 }
@@ -35,7 +36,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .animate__animated.animate__rubberBand {
-  --animate-duration: 2000ms;
+  --animate-duration: 1800ms;
 }
 
 .own-svg-size {
@@ -47,6 +48,10 @@ h1, h2, h3, h4, h5, h6 {
   .own-svg-size {
     width: 1.6rem !important;
     height: 1.6rem !important;
+  }
+  .own-home-bgimage {
+    height: 20vh !important;
+    background-size: 100% 20vh !important;
   }
 }
 /*# sourceMappingURL=style.css.map */

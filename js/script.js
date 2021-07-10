@@ -18,7 +18,7 @@ class Place {
     _addleadingzero_(str) {
         return (str.length == 1) ? ('0' + str) : str;
     }
-    _gettime_(date) {
+    _gettimestring_(date) {
         let h = this._addleadingzero_(date.getHours().toString());
         let m = this._addleadingzero_(date.getMinutes().toString());
         let time = `${h}:${m}`;
@@ -32,9 +32,9 @@ class Place {
     }
     GetBlogDate() {
         // it looks like replaceAll isn't recognized in TS sometimes, that's why I make another version down below
-        // return `${_getweekday_()}., ${this.date.toLocaleDateString().replaceAll('/', '.')} - ${_gettime_()}`;
+        // return `${_getweekday_()}., ${this.date.toLocaleDateString().replaceAll('/', '.')} - ${_gettimestring_()}`;
         let date_string = this._createdatestring_(this.date);
-        return `${date_string} - ${this._gettime_(this.date)}`;
+        return `${date_string} - ${this._gettimestring_(this.date)}`;
     }
     PrintHeader() {
         return `
@@ -117,10 +117,10 @@ class Events extends Place {
     <p class="card-text text-center"><strong>Price: </strong>${this.price}&euro;</p>`;
     }
     GetEventDate() {
-        // return `${this._getweekday_(this.event_date.getDay())}., ${this.event_date.toLocaleDateString().replaceAll('/', '.')} - ${super._gettime_(this.event_date)}`;
+        // return `${this._getweekday_(this.event_date.getDay())}., ${this.event_date.toLocaleDateString().replaceAll('/', '.')} - ${super._gettimestring_(this.event_date)}`;
         let date_string = super._createdatestring_(this.event_date);
         let day = this.event_date.getDay();
-        return `${this._getweekday_(day)}., ${date_string} - ${super._gettime_(this.event_date)}`;
+        return `${this._getweekday_(day)}., ${date_string} - ${super._gettimestring_(this.event_date)}`;
     }
 }
 // Generate random integer between lo..hi
@@ -215,6 +215,7 @@ function SortBlog() {
             icon_id_element.innerHTML = `<svg class="own-svg-size" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
       <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
       </svg>`;
+            ICLICK++;
             break;
         case 1: // low to high
             PLACE_ARRAY.sort((a, b) => {
@@ -226,8 +227,9 @@ function SortBlog() {
             icon_id_element.innerHTML = `<svg class="own-svg-size" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
       <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
       </svg>`;
+            ICLICK++;
             break;
-        case 3: // neutral order
+        case 2: // neutral order
             PLACE_ARRAY.sort((a, b) => {
                 return a._placeorder_ - b._placeorder_ || a._cardorder_ - b._cardorder_;
             });
@@ -235,6 +237,7 @@ function SortBlog() {
             icon_id_element.innerHTML = `<svg class="own-svg-size" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
       <path d="M0 8a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H1a1 1 0 0 1-1-1z"/>
       </svg>`;
+            ICLICK++;
             break;
         default: //error handling reset everything, pretty much same as case 3/neutral
             PLACE_ARRAY.sort((a, b) => {
@@ -247,7 +250,6 @@ function SortBlog() {
             console.log("Something is wrong here. Hit default!");
             ICLICK = 0;
     }
-    ICLICK++;
     // build blog element again
     CreateBlogSection();
 }
