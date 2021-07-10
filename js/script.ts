@@ -10,7 +10,8 @@ interface PlaceInterface {
   zip_code: number;
   image: string;
   date: Date;
-  _order_?: number;
+  _placeorder_?: number;
+  _cardorder_?: number;
   GetPosition: Function;
   GetBlogDate: Function;
   PrintHeader: Function;
@@ -26,7 +27,7 @@ var PLACE_ARRAY: Array<PlaceInterface> = new Array(); // global array to add in 
 
 // Create Super/Parent Class for all other classes that implements "Places" for less code
 class Place implements PlaceInterface {
-  constructor(public name: string, public address: string, public city: string, public zip_code: number, public image: string, public date: Date, public _order_?: number) {}
+  constructor(public name: string, public address: string, public city: string, public zip_code: number, public image: string, public date: Date, public _placeorder_?: number, public _cardorder_?: number) {}
   
   GetPosition(): string {
     return `${this.address},<br /> ${this.zip_code} ${this.city}`;
@@ -36,7 +37,7 @@ class Place implements PlaceInterface {
     return (str.length == 1) ? ('0'+str) : str;
   }
   _gettime_ (date: Date): string {
-    let h: string = date.getHours().toString();
+    let h: string = this._addleadingzero_(date.getHours().toString());
     let m: string = this._addleadingzero_(date.getMinutes().toString());
     let time: string = `${h}:${m}`;
     return time;
@@ -98,8 +99,8 @@ class Place implements PlaceInterface {
 ///////////// Define Classes //////////////////////////////////////
 //*********** CREATE CLASS "LOCATIONS" WITH FUNCTIONS ***********/
 class Locations extends Place  {
-  constructor(name: string, address: string, city: string, zip_code: number, image: string, date: Date, _order_?: number) {
-    super(name, address, city, zip_code, image, date, _order_);
+  constructor(name: string, address: string, city: string, zip_code: number, image: string, date: Date, _placeorder_?: number, _cardorder_?: number) {
+    super(name, address, city, zip_code, image, date, _placeorder_, _cardorder_);
     PLACE_ARRAY.push(this);
   }
 }
@@ -108,15 +109,15 @@ class Locations extends Place  {
 //*********** CREATE CLASS "RESTAURANTS" WITH FUNCTIONS ***********/
 // cuisine (“Chinese”, “Indian”, “Viennese”, …) 
 class Restaurants extends Place  {
-  constructor(name: string, address: string, city: string, zip_code: number, image: string, date: Date, public cuisine: string, public phone: string, public website: string, _order_?: number) {
-    super(name, address, city, zip_code, image, date, _order_);
+  constructor(name: string, address: string, city: string, zip_code: number, image: string, date: Date, public cuisine: string, public phone: string, public website: string, _placeorder_?: number, _cardorder_?: number) {
+    super(name, address, city, zip_code, image, date, _placeorder_, _cardorder_);
     PLACE_ARRAY.push(this);
   }
 
   Display(): string {
-    // again replaceAll might not work everywhere, at least some TS error gets raised
+    // replaceAll might not work everywhere, at least some TS error gets raised, though could be fixed w/ "ESNext.String" inside config
     // let a_phone = this.phone.replaceAll(' ','').replaceAll('-','').replaceAll('(', '').replace(')', '');
-    let a_phone = this.phone.split(' ').join('').split('-').join('').split('(').join('').split(')').join('');
+    let a_phone = this.phone.split(' ').join('').split('-').join('').split('(').join('').split(')').join(''); // would be less code with regexp
     return `${super.Display()}
     <p class="card-text text-center">${this.cuisine} restaurant</p>
     <p class="card-text text-center"><a href="${this.website}" target="_blank">${this.website}</a></p>
@@ -128,8 +129,8 @@ class Restaurants extends Place  {
 
 //*********** CREATE CLASS "EVENTS" WITH FUNCTIONS ***********/
 class Events extends Place  { // apparently the class Event exists within TS, therefore I renamed it
-  constructor(name: string, address: string, city: string, zip_code: number, image: string, date: Date, public price: number, public event_date: Date, _order_?: number) {
-    super(name, address, city, zip_code, image, date, _order_);
+  constructor(name: string, address: string, city: string, zip_code: number, image: string, date: Date, public price: number, public event_date: Date, _placeorder_?: number, _cardorder_?: number) {
+    super(name, address, city, zip_code, image, date, _placeorder_, _cardorder_);
     PLACE_ARRAY.push(this);
   }
 
@@ -145,9 +146,7 @@ class Events extends Place  { // apparently the class Event exists within TS, th
   }
 
   GetEventDate(): string {
-    // it looks like replaceAll sometimes isn't recognized in TS sometimes, that's why I make another version down below
     // return `${this._getweekday_(this.event_date.getDay())}., ${this.event_date.toLocaleDateString().replaceAll('/', '.')} - ${super._gettime_(this.event_date)}`;
-    // console.log("Year: " + this.event_date.getFullYear(), "Month: " + this.event_date.getMonth(), "Day: " + this.event_date.getDay());
     let date_string: string = super._createdatestring_(this.event_date);
     let day: number = this.event_date.getDay();
     return `${this._getweekday_(day)}., ${date_string} - ${super._gettime_(this.event_date)}`;
@@ -159,11 +158,13 @@ class Events extends Place  { // apparently the class Event exists within TS, th
 
 // Generate random integer between lo..hi
 function RandomInt(lo: number, hi: number): number {
-  return Math.round(lo + Math.random() * (hi-lo));
+  // return Math.round(lo + Math.random() * (hi - lo)); // no real int in JS, except parseInt for strings
+  return parseInt((lo + Math.random() * (hi - lo)).toFixed());
 }
+// console.log(RandomInt(0, 6), typeof (RandomInt(0,6)));
 
 // Generate random Date
-// var d = new Date(year, month, day, hours, minutes, seconds)
+// new Date(year, month, day, hours, minutes, seconds)
 function RandomDate(): Date {
   let year = RandomInt(2019, 2021);
   let month = RandomInt(0, 11);
@@ -174,22 +175,22 @@ function RandomDate(): Date {
 }
 
 // Fill Places, Restaurants and Events Classes with data and add it to the global array
-new Locations("St. Charles Church", "Karlsplatz 1", "Vienna", 1010, "img/St Charles Church_new.jpg", RandomDate(), 0);
-new Locations("Zoo Vienna", "Maxingstraße 13b", "Vienna", 1130, "img/Zoo Vienna_new.jpg", RandomDate(), 0);
-new Locations("B Location", "Karlsplatz 1", "Vienna", 1010, "img/St Charles Church_new.jpg", RandomDate(), 0);
-new Locations("C Location", "Maxingstraße 13b", "Vienna", 1130, "img/Zoo Vienna_new.jpg", RandomDate(), 0);
+new Locations("St. Charles Church", "Karlsplatz 1", "Vienna", 1010, "img/St Charles Church_new.jpg", RandomDate(), 0, 0);
+new Locations("Zoo Vienna", "Maxingstraße 13b", "Vienna", 1130, "img/Zoo Vienna_new.jpg", RandomDate(), 0, 1);
+new Locations("Spielraum", "Otto-Bauer-Gasse 17", "Vienna", 1060, "img/Spielraum_new.jpg", RandomDate(), 0, 2);
+new Locations("Area52", "Franklinstrasse 20/9/R1", "Vienna", 1210, "img/Area52_new.jpg", RandomDate(), 0, 3);
 
 
-new Restaurants("Lemon Leaf", "Kettenbrückengasse 19", "Vienna", 1050, "img/Lemon Leaf Thai Restaurant_new.png", RandomDate(), "Thai", "+43(1)5812308", "www.lemonleaf.at", 1);
-new Restaurants("SIXTA", "Schönbrunner Straße 21", "Vienna", 1050, "img/SIXTA Restaurant_new.png", RandomDate(), "All Cuisines", "+43 1 58 528 56", "www.sixta-restaurant.at", 1);
-new Restaurants("Chinese Restaurant", "Kettenbrückengasse 19", "Vienna", 1050, "img/Lemon Leaf Thai Restaurant_new.png", RandomDate(), "Chinese", "+43(1)5812308", "www.lemonleaf.at", 1);
-new Restaurants("Running Sushi", "Schönbrunner Straße 21", "Vienna", 1050, "img/SIXTA Restaurant_new.png", RandomDate(), "Japanese", "+43 1 58 528 56", "www.sixta-restaurant.at", 1);
+new Restaurants("Lemon Leaf", "Kettenbrückengasse 19", "Vienna", 1050, "img/Lemon Leaf Thai Restaurant_new.png", RandomDate(), "Thai", "+43(1)5812308", "www.lemonleaf.at", 1, 0);
+new Restaurants("SIXTA", "Schönbrunner Straße 21", "Vienna", 1050, "img/SIXTA Restaurant_new.png", RandomDate(), "All Cuisines", "+43 1 58 528 56", "www.sixta-restaurant.at", 1, 1);
+new Restaurants("Chinese Restaurant", "Erzherzog-Karl-Straße 169", "Vienna", 1220, "img/Wokhouse_new.jpg", RandomDate(), "Chinese", "+43 1 285 73 11", "www.wokhouse.at", 1, 2);
+new Restaurants("Kyoto Running Sushi", "SCS-Straße B4", "Vösendorf", 2334, "img/Kyoto_Sushi_new.png", RandomDate(), "Japanese", "+43 2236 614 13", "www.scs.at/restaurant/kyoto-running-sushi", 1, 3);
 
 
-new Events("Kris Kristofferson", "Wiener Stadthalle, Halle F, Roland Rainer Platz 1", "Vienna", 1150, "img/Kris Kristofferson_new.jpg", new Date(), 58.5, new Date(2021, 10, 15, 20, 0), 2);
-new Events("Lenny Kravitz", "Wiener Stadthalle - Halle D, Roland Rainer Platz 1", "Vienna", 1150, "img/Lenny Kravitz_new.jpg", RandomDate(), 47.80, new Date(2029, 11, 9, 19, 30), 2);
-new Events("AniNite 2021", "Parkallee 2", "Vösendorf", 2334, "img/ANiNite21_new.jpg", RandomDate(), 20, new Date(2021, 7, 27, 10, 0), 2);
-new Events("Game City 2022", "Rathausplatz 1", "Vienna", 1010, "img/GameCity22_new.jpg", RandomDate(), 0, new Date(2022, 9, 14, 9, 0), 2);
+new Events("Kris Kristofferson", "Wiener Stadthalle, Halle F, Roland Rainer Platz 1", "Vienna", 1150, "img/Kris Kristofferson_new.jpg", new Date(), 58.5, new Date(2021, 10, 15, 20, 0), 2, 0);
+new Events("Lenny Kravitz", "Wiener Stadthalle - Halle D, Roland Rainer Platz 1", "Vienna", 1150, "img/Lenny Kravitz_new.jpg", RandomDate(), 47.80, new Date(2029, 11, 9, 19, 30), 2, 1);
+new Events("AniNite 2021", "Parkallee 2", "Vösendorf", 2334, "img/ANiNite21_new.jpg", RandomDate(), 20, new Date(2021, 7, 27, 10, 0), 2, 2);
+new Events("Game City 2022", "Rathausplatz 1", "Vienna", 1010, "img/GameCity22_new.jpg", RandomDate(), 0, new Date(2022, 9, 14, 9, 0), 2, 3);
 
 
 /* get section element to put blog into, HTMLCollection won't work,
@@ -233,15 +234,6 @@ const CreateBlogSection = (): void => {
 
 
 // DO SORTING STUFF, WILL ONLY BE RELEVANT FOR "index-asc-desc.htm" THOUGH!
-// console.table(PLACE_ARRAY);
-// PLACE_ARRAY.sort((a: PlaceInterface, b: PlaceInterface): number => {
-//   // add .valueOf() just in case to avoid "righ-/left-hand side of an..."-error thrown by TS, but works anyways. Same with replaceAll
-//   // sorting high to low
-//   return a._order_ - b._order_ || b.date.valueOf() - a.date.valueOf();
-//   // return b.constructor.name.localeCompare(a.constructor.name) || a.date.valueOf() - b.date.valueOf();
-// });
-
-// if (blog_section_element.innerHTML.length == 0) CreateBlogSection();
 
 // console.table(PLACE_ARRAY);
 if (blog_section_element.innerHTML.length == 0) CreateBlogSection()
@@ -264,39 +256,52 @@ var ICLICK: number = 0;
 function SortBlog(): void {
   let icon_id_element: HTMLElement = document.getElementById("SortingIcon");
   console.log(ICLICK, ICLICK % 3);
-  switch(ICLICK%2) {
-      case 0: // high to low
-          PLACE_ARRAY.sort((a: PlaceInterface, b: PlaceInterface): number => {
-            // add .valueOf() just in case to avoid "righ-/left-hand side of an..."-error thrown by TS, but works anyways. Same with replaceAll
-            return a._order_ - b._order_ || b.date.valueOf() - a.date.valueOf();
-            // return b.constructor.name.localeCompare(a.constructor.name) || a.date.valueOf() - b.date.valueOf();
-          });
-          // set correct icon
-          icon_id_element.innerHTML = `<svg class="own-svg-size" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-          <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-          </svg>`;
-          break;
-      case 1: // low to high
-          PLACE_ARRAY.sort((a: PlaceInterface, b: PlaceInterface): number => {
-            // add .valueOf() just in case to avoid "righ-/left-hand side of an..."-error thrown by TS, but works anyways. Same with replaceAll
-            return a._order_ - b._order_ || a.date.valueOf() - b.date.valueOf();
-            // return b.constructor.name.localeCompare(a.constructor.name) || a.date.valueOf() - b.date.valueOf();
-          });
-          // set correct icon
-          icon_id_element.innerHTML = `<svg class="own-svg-size" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-          <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-          </svg>`;
-          break;
-      default: //error handling reset everything, pretty much same as case above
-          PLACE_ARRAY.sort((a: PlaceInterface, b: PlaceInterface): number => {
-            return a._order_ - b._order_;
-          });
-          // set correct icon
-          icon_id_element.innerHTML = `<svg class="own-svg-size" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
-          <path d="M0 8a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H1a1 1 0 0 1-1-1z"/>
-                                    </svg>`;
-          console.log("Something is wrong here. Hit default!");
-          ICLICK = 0;
+  switch (ICLICK % 3) {
+
+    case 0: // high to low
+      PLACE_ARRAY.sort((a: PlaceInterface, b: PlaceInterface): number => {
+          // add .valueOf() just in case to avoid "righ-/left-hand side of an..."-error thrown by TS, but works anyways. Same with replaceAll
+          return a._placeorder_ - b._placeorder_ || b.date.valueOf() - a.date.valueOf();
+          // return b.constructor.name.localeCompare(a.constructor.name) || a.date.valueOf() - b.date.valueOf();
+      });
+      // set up-arrow icon
+      icon_id_element.innerHTML = `<svg class="own-svg-size" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+      <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+      </svg>`;
+      break;
+    
+    case 1: // low to high
+      PLACE_ARRAY.sort((a: PlaceInterface, b: PlaceInterface): number => {
+        // add .valueOf() just in case to avoid "righ-/left-hand side of an..."-error thrown by TS, but works anyways. Same with replaceAll
+        return a._placeorder_ - b._placeorder_ || a.date.valueOf() - b.date.valueOf();
+        // return b.constructor.name.localeCompare(a.constructor.name) || a.date.valueOf() - b.date.valueOf();
+      });
+      // set down-arrow icon
+      icon_id_element.innerHTML = `<svg class="own-svg-size" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+      <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+      </svg>`;
+      break;
+    
+    case 3: // neutral order
+      PLACE_ARRAY.sort((a: PlaceInterface, b: PlaceInterface): number => {
+        return a._placeorder_ - b._placeorder_ || a._cardorder_ - b._cardorder_;
+      });
+      // set neutral icon
+      icon_id_element.innerHTML = `<svg class="own-svg-size" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
+      <path d="M0 8a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H1a1 1 0 0 1-1-1z"/>
+      </svg>`;
+      break;
+    
+    default: //error handling reset everything, pretty much same as case 3/neutral
+      PLACE_ARRAY.sort((a: PlaceInterface, b: PlaceInterface): number => {
+        return a._placeorder_ - b._placeorder_ || a._cardorder_ - b._cardorder_;
+      });
+      // set neutral icon
+      icon_id_element.innerHTML = `<svg class="own-svg-size" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
+      <path d="M0 8a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H1a1 1 0 0 1-1-1z"/>
+      </svg>`;
+      console.log("Something is wrong here. Hit default!");
+      ICLICK = 0;
   }
 
   ICLICK++;
