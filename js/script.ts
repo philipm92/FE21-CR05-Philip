@@ -140,16 +140,22 @@ class Events extends Place  { // apparently the class Event exists within TS, th
   }
 
   Display(): string {
+    // add two decimals to price
+    let price_string: string = `<p class="card-text text-center"><strong>Price: </strong>${this.price.toFixed(2)}&euro;</p>`;
+    // show price without decimal if there is no cent amount
+    if (parseInt(this.price.toString()) == this.price) price_string = `<p class="card-text text-center"><strong>Price: </strong>${this.price}&euro;</p>`;
+    // change price text to free, if zero
+    if (this.price == 0) price_string = "<p class=\"card-text text-center\"><strong>-FREE-</strong>"; 
     return `${super.Display()} 
     <p class="card-text text-center">${this.GetEventDate()}</p>
-    <p class="card-text text-center"><strong>Price: </strong>${this.price}&euro;</p>`;
+    ${price_string}`;
   }
 
   GetEventDate(): string {
     // return `${this._getweekday_(this.event_date.getDay())}., ${this.event_date.toLocaleDateString().replaceAll('/', '.')} - ${super._gettimestring_(this.event_date)}`;
     let date_string: string = super._createdatestring_(this.event_date);
     let day: number = this.event_date.getDay();
-    return `${this._getweekday_(day)}., ${date_string} - ${super._gettimestring_(this.event_date)}`;
+    return `<strong>Event on: </strong> ${this._getweekday_(day)}., ${date_string} - ${super._gettimestring_(this.event_date)}`;
   }
 
 }
@@ -176,20 +182,20 @@ function RandomDate(): Date {
 
 // Fill Places, Restaurants and Events Classes with data and add it to the global array
 new Locations("St. Charles Church", "Karlsplatz 1", "Vienna", 1010, "img/St Charles Church_new.jpg", RandomDate(), 0, 0);
-new Locations("Zoo Vienna", "Maxingstraße 13b", "Vienna", 1130, "img/Zoo Vienna_new.jpg", RandomDate(), 0, 1);
+new Locations("Zoo Vienna", "Maxingstra&szlig;e 13b", "Vienna", 1130, "img/Zoo Vienna_new.jpg", RandomDate(), 0, 1);
 new Locations("Spielraum", "Otto-Bauer-Gasse 17", "Vienna", 1060, "img/Spielraum_new.jpg", RandomDate(), 0, 2);
 new Locations("Area52", "Franklinstrasse 20/9/R1", "Vienna", 1210, "img/Area52_new.jpg", RandomDate(), 0, 3);
 
 
-new Restaurants("Lemon Leaf", "Kettenbrückengasse 19", "Vienna", 1050, "img/Lemon Leaf Thai Restaurant_new.png", RandomDate(), "Thai", "+43(1)5812308", "www.lemonleaf.at", 1, 0);
-new Restaurants("SIXTA", "Schönbrunner Straße 21", "Vienna", 1050, "img/SIXTA Restaurant_new.png", RandomDate(), "All Cuisines", "+43 1 58 528 56", "www.sixta-restaurant.at", 1, 1);
-new Restaurants("Chinese Restaurant", "Erzherzog-Karl-Straße 169", "Vienna", 1220, "img/Wokhouse_new.jpg", RandomDate(), "Chinese", "+43 1 285 73 11", "www.wokhouse.at", 1, 2);
-new Restaurants("Kyoto Running Sushi", "SCS-Straße B4", "Vösendorf", 2334, "img/Kyoto_Sushi_new.png", RandomDate(), "Japanese", "+43 2236 614 13", "www.scs.at/restaurant/kyoto-running-sushi", 1, 3);
+new Restaurants("Lemon Leaf", "Kettenbr&uuml;ckengasse 19", "Vienna", 1050, "img/Lemon Leaf Thai Restaurant_new.png", RandomDate(), "Thai", "+43(1)5812308", "www.lemonleaf.at", 1, 0);
+new Restaurants("SIXTA", "Sch&ouml;nbrunner Stra&szlig;e 21", "Vienna", 1050, "img/SIXTA Restaurant_new.png", RandomDate(), "All Cuisines", "+43 1 58 528 56", "www.sixta-restaurant.at", 1, 1);
+new Restaurants("Chinese Restaurant", "Erzherzog-Karl-Stra&szlig;e 169", "Vienna", 1220, "img/Wokhouse_new.jpg", RandomDate(), "Chinese", "+43 1 285 73 11", "www.wokhouse.at", 1, 2);
+new Restaurants("Kyoto Running Sushi", "SCS-Strasse B4", "V&ouml;sendorf", 2334, "img/Kyoto_Sushi_new.png", RandomDate(), "Japanese", "+43 2236 614 13", "www.scs.at/restaurant/kyoto-running-sushi", 1, 3);
 
 
 new Events("Kris Kristofferson", "Wiener Stadthalle, Halle F, Roland Rainer Platz 1", "Vienna", 1150, "img/Kris Kristofferson_new.jpg", new Date(), 58.5, new Date(2021, 10, 15, 20, 0), 2, 0);
 new Events("Lenny Kravitz", "Wiener Stadthalle - Halle D, Roland Rainer Platz 1", "Vienna", 1150, "img/Lenny Kravitz_new.jpg", RandomDate(), 47.80, new Date(2029, 11, 9, 19, 30), 2, 1);
-new Events("AniNite 2021", "Parkallee 2", "Vösendorf", 2334, "img/ANiNite21_new.jpg", RandomDate(), 20, new Date(2021, 7, 27, 10, 0), 2, 2);
+new Events("AniNite 2021", "Parkallee 2", "V&ouml;sendorf", 2334, "img/ANiNite21_new.jpg", RandomDate(), 20, new Date(2021, 7, 27, 10, 0), 2, 2);
 new Events("Game City 2022", "Rathausplatz 1", "Vienna", 1010, "img/GameCity22_new.jpg", RandomDate(), 0, new Date(2022, 9, 14, 9, 0), 2, 3);
 
 
